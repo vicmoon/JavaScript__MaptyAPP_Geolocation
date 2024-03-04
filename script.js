@@ -112,7 +112,7 @@ class App{
     _newWorkout(e){
 
         const validInputs = (...inputs) => inputs.every(inp => Number.isFinite(inp));  // every will return true if all are true
-        const allPositive = (...inputs) => inputs.every(inp => inp >0); 
+        const allPositive = (...inputs) => inputs.every(inp => inp > 0 ); 
 
         e.preventDefault(e);
 
@@ -131,21 +131,25 @@ class App{
             if(type ==='running'){
                 const cadence = +inputCadence.value; 
 
-                if(!validInputs(distance, duration, cadence) || !allPositive(distance, duration, cadence));
+                if(
+                    !validInputs(distance, duration, cadence) || 
+                    !allPositive(distance, duration, cadence));
                     return alert('Inputs have to be positive numbers');
-            }
+            };
 
-            
+        
 
             //If Walking, create Walkinng object 
 
-            if(type ==='walking'){
+            if(type === 'walking'){
                 const elevation = +inputElevation.value; 
                
-                if(!validInputs(distance, duration, elevation) || !allPositive(distance, duration)); 
+                if(
+                !validInputs(distance, duration, elevation) || 
+                !allPositive(distance, duration))
                     return alert('Inputs have to be positive numbers');
                 
-            }
+            };
 
             //Add workout to Workout array 
 
