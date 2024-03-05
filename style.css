@@ -80,7 +80,7 @@
   .workout--running {
     border-left: 5px solid var(--color-brand--2);
   }
-  .workout--cycling {
+  .workout--walking {
     border-left: 5px solid var(--color-brand--1);
   }
   
