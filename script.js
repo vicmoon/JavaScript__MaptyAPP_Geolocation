@@ -72,6 +72,10 @@ const inputDistance = document.querySelector('.form__input--distance');
 const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
+const editButton = document.querySelector('.workout__edit');
+console.log(editButton);
+const deleteButton = document.querySelector('.workout__delete');
+
 
 
 
@@ -93,6 +97,23 @@ class App{
         form.addEventListener('submit',this._newWorkout.bind(this)); //without bind this is pointing to the form
         inputType.addEventListener('change',  this._toggleElevationField); 
         containerWorkouts.addEventListener('click', this._moveToPopUp.bind(this));
+        containerWorkouts.addEventListener('click', function (e) {
+          const editButton = e.target.closest('.workout__edit');
+          if (editButton) {
+              // Handle the edit button click event
+              this._editWorkout();
+          }
+      
+          const deleteButton = e.target.closest('.workout__delete');
+          if (deleteButton) {
+              // Handle the delete button click event
+              this._deleteWorkout();
+          }
+      }.bind(this));
+
+
+      
+     
     }
 
     _getPositions() {
@@ -236,12 +257,14 @@ class App{
             .openPopup();        
  
         }
+
+  
     
 
         _renderWorkout(workout) {
             let html = `
               <li class="workout workout--${workout.type}" data-id="${workout.id}">
-                <h2 class="workout__title">${workout.description}</h2>
+                <h2 class="workout__title">${workout.description} </h2>
                 <div class="workout__details">
                   <span class="workout__icon">${
                     workout.type === 'running' ? '🏃‍♂️' : '🚶🏻‍♀️'
@@ -249,11 +272,15 @@ class App{
                   <span class="workout__value">${workout.distance}</span>
                   <span class="workout__unit">km</span>
                 </div>
+            
                 <div class="workout__details">
                   <span class="workout__icon">⏱</span>
                   <span class="workout__value">${workout.duration}</span>
                   <span class="workout__unit">min</span>
                 </div>
+                
+                
+              
             `;
         
             if (workout.type === 'running')
@@ -268,7 +295,12 @@ class App{
                   <span class="workout__value">${workout.cadence}</span>
                   <span class="workout__unit">spm</span>
                 </div>
+                <div class="workout__actions">
+                  <button class="workout__edit">Edit</button>
+                  <button class="workout__delete">Delete</button>
+                </div>
               </li>
+              
               `;
         
             if (workout.type === 'walking')
@@ -283,30 +315,46 @@ class App{
                   <span class="workout__value">${workout.elevationGain}</span>
                   <span class="workout__unit">m</span>
                 </div>
+                <div class="workout__actions">
+                  <button class="workout__edit">Edit</button>
+                  <button class="workout__delete">Delete</button>
+                </div>
               </li>
+          
               `;
         
             form.insertAdjacentHTML('afterend', html);
-          }; 
+            
+      
+       };
+       
+      _editWorkout(){
+        console.log('Edit');
+      }
+
+      _deleteWorkout(){
+        console.log('Delete');
+      }
 
       
-        _moveToPopUp(e){
+      _moveToPopUp(e){
         
-            const workoutEl = e.target.closest('.workout'); 
+        const workoutEl = e.target.closest('.workout'); 
 
-            if(!workoutEl) return ;
+        if(!workoutEl) return ;
 
-            const workout = this.#workouts.find(work => work.id === workoutEl.dataset.id); 
-    
+        const workout = this.#workouts.find(work => work.id === workoutEl.dataset.id); 
 
-            this.#map.setView(workout.coords,this.#mapZoom, {
-                animate: true,
-                pan: {
-                    duration: 1,
-                }
-            } )
 
-        }; 
+        this.#map.setView(workout.coords,this.#mapZoom, {
+            animate: true,
+            pan: {
+                duration: 1,
+            }
+        } )
+
+    };
+      
 
         _setLocalStorage(){
             localStorage.setItem('workouts', JSON.stringify(this.#workouts))
@@ -330,7 +378,10 @@ class App{
         localStorage.removeItem('workouts');   
         location.reload();
     }
-    };        
+
+
+    };   
+ 
 
 
 const app = new App(); 
